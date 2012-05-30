@@ -1,0 +1,7 @@
+
+PyRus=/home/aaron/Dropbox/Projects/PyRus {
+	src=PyRus filter="\(test_\)\@!*.py" {
+	}
+	tests=PyRus filter=**/test_*.py" {
+	}
+}
