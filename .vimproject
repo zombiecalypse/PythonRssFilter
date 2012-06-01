@@ -1,7 +1,16 @@
-
 PyRus=/home/aaron/Dropbox/Projects/PyRus {
-	src=PyRus filter="\(test_\)\@!*.py" {
-	}
-	tests=PyRus filter=**/test_*.py" {
-	}
+ PyRus.py
+ setup.py
+ test.sh
+ src=PyRus filter="\(test_\)\@!*.py" {
+  __init__.py
+  processing.py
+  rss.py
+  rssxml.py
+ }
+ tests=PyRus filter="**/test_*.py" {
+  test_helpers.py
+  test_io.py
+  test_merge.py
+ }
 }

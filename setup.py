@@ -10,4 +10,4 @@ setup(
 	author_email = "None",
 	scripts = ['PyRus.py'],
 	packages = ['PyRus'],
-	install_requires = ["setuptools", 'lxml', 'httplib2'])
+	install_requires = ["setuptools", 'feedreader', 'future'])
