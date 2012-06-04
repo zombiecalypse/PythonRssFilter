@@ -1,5 +1,6 @@
 from operator import add
 from concurrent import futures
+from .filters import filter as filt
 
 def updated(d, **kwargs):
     d2 = dict(d)
@@ -8,7 +9,7 @@ def updated(d, **kwargs):
 
 def filter(rss):
     "RssFeed -> RssFeed, such that unwanted items are removed"
-    return rss # TODO
+    return filt(rss)
 
 def sort(rss):
     "RssFeed -> RssFeed, such that important items turn up top"
