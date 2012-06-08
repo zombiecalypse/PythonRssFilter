@@ -1,31 +1,36 @@
 from operator import add
 from concurrent import futures
-from .filters import filter as filt
+from .filters import filter, make_filter_from_config
 
-def updated(d, **kwargs):
+def _updated(d, **kwargs):
     d2 = dict(d)
     d2.update(kwargs)
     return d2
 
-def filter(rss):
-    "RssFeed -> RssFeed, such that unwanted items are removed"
-    return filt(rss)
+class Processor(object):
+    def __init__(self, config):
+        self.new_name = config['new_name'] if 'new_name' in config else "merged"
+        self.main_filter = make_filter_from_config(config['filter']) if 'filter' in config else lambda x: x
 
-def sort(rss):
-    "RssFeed -> RssFeed, such that important items turn up top"
-    return updated(rss, entries = 
-                list(reversed(sorted(
-                    rss['entries'], 
-                    key = lambda x: x['updated_parsed'])))) #TODO
+    def filter(self, rss):
+        "RssFeed -> RssFeed, such that unwanted items are removed"
+        return _updated(rss, entries = filter(self.main_filter, rss['entries']))
 
-def process_single(rss):
-    return sort(filter(rss))
+    def sort(self, rss):
+        "RssFeed -> RssFeed, such that important items turn up top"
+        return _updated(rss, entries = 
+                    list(reversed(sorted(
+                        rss['entries'], 
+                        key = lambda x: x['updated_parsed'])))) #TODO
 
-def merge(rsses, new_name = "Merged"):
-    "[RssFeed] -> RssFeed"
-    all_items = reduce(add, [e['entries'] for e in rsses], [])
-    return sort( dict(entries = all_items, feed = dict(title = new_name)))
+    def process_single(self, rss):
+        return self.sort(self.filter(rss))
 
-def process(rsses, new_name = "Combined"):
-    with futures.ThreadPoolExecutor(max_workers=10) as e:
-        return merge(e.map(process_single, rsses), new_name)
+    def merge(self, rsses):
+        "[RssFeed] -> RssFeed"
+        all_items = reduce(add, [e['entries'] for e in rsses], [])
+        return self.sort( dict(entries = all_items, feed = dict(title = self.new_name)))
+
+    def process(self, rsses):
+        with futures.ThreadPoolExecutor(max_workers=10) as e:
+            return self.merge(e.map(self.process_single, rsses))

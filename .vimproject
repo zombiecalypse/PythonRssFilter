@@ -14,5 +14,6 @@ PyRus=/home/aaron/Dropbox/Projects/PyRus {
   test_helpers.py
   test_io.py
   test_merge.py
+  test_filters.py
  }
 }
