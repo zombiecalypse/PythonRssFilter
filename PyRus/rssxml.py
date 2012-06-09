@@ -20,9 +20,9 @@ def rss_xml(rss):
 def try_to_make_guid(item):
     try:
         return E.guid(item['id'], isPermaLink = str(item['guidislink']).lower())
-    except:
+    except Exception as e:
         print item
-        return None
+        raise e
 
 def xml_item(item):
     "Item -> Xml"
