@@ -4,6 +4,7 @@ import argparse, os.path
 from PyRus import *
 from pprint import pprint
 from time import sleep
+from datetime import datetime
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "TODO")
@@ -14,13 +15,18 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', help = "output file", default = None)
     args = parser.parse_args()
     config_path = os.path.expanduser(args.config)
-    processor = processing.Processor(read_config(config_path))
-    if args.sleep is not None and args.output is not None:
+    config = read_config(config_path)
+    processor = processing.Processor(config)
+    url = args.url or config['url']
+    output = args.output or config['output']
+    print "Activate {url} => {output}".format(url = url, output = output)
+    if args.sleep is not None:
         while True:
-            gotten = rssxml.xml_string(processor.process(get_feeds(args.url)))
-            with open(args.output, 'w') as f:
+            feeds = get_feeds(url)
+            gotten = rssxml.xml_string(processor.process(get_feeds(url)))
+            with open(output, 'w') as f:
                 f.write(gotten)
-            print('.')
+            print datetime.now()
             sleep(args.sleep)
     else:
-        print (rssxml.xml_string(processor.process(get_feeds(args.url))))
+        print (rssxml.xml_string(processor.process(get_feeds(url))))

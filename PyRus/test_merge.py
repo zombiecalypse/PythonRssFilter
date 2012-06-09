@@ -194,6 +194,7 @@ class TestMerge(TestCase):
     def parse(self):
         self.rss1 =  get_feed(xkcd_string)
         self.rss2 =  get_feed(reddit_string)
+        self.proc = Processor(dict(new_name = "Merged"))
 
     @Given(parse)
     def pre_merge(self):
@@ -203,7 +204,7 @@ class TestMerge(TestCase):
 
     @Given(parse)
     def merge(self):
-        self.merge = merge([self.rss1, self.rss2], 'Merged')
+        self.merge = self.proc.merge([self.rss1, self.rss2])
 
     def valid_feed(self, feed, title, n_entries):
         self.assertThat(feed, IsInstance(dict))
