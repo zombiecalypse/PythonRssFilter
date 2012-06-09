@@ -17,11 +17,18 @@ def rss_xml(rss):
             version = "2.0"
             )
 
+def try_to_make_guid(item):
+    try:
+        return E.guid(item['id'], isPermaLink = str(item['guidislink']).lower())
+    except:
+        print item
+        return None
+
 def xml_item(item):
     "Item -> Xml"
     return E.item(
             E.title(item['title']),
             E.pubDate(item['updated']),
             E.description(item['description']),
-            E.guid(item['id'], isPermaLink = str(item['guidislink']).lower()),
+            try_to_make_guid(item),
             E.link(item['link']))
