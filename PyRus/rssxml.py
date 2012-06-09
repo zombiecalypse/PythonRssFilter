@@ -21,7 +21,7 @@ def try_to_make_guid(item):
     try:
         return E.guid(item['id'], isPermaLink = str(item['guidislink']).lower())
     except KeyError as e:
-        return E.guid(item['link', isPermaLink = 'true')
+        return E.guid(item['link'], isPermaLink = 'true')
 
 def xml_item(item):
     "Item -> Xml"
