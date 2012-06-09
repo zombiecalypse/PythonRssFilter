@@ -5,6 +5,7 @@ from PyRus import *
 from pprint import pprint
 from time import sleep
 from datetime import datetime
+from md5 import md5
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "TODO")
@@ -16,12 +17,23 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config_path = os.path.expanduser(args.config)
     config = read_config(config_path)
+    with open(config_path) as f:
+        config_hash = md5(f.read())
+
     processor = processing.Processor(config)
     url = args.url or config['url']
     output = args.output or config['output']
-    print "Activate {url} => {output}".format(url = url, output = output)
     if args.sleep is not None:
         while True:
+            with open(config_path) as f:
+                new_config_hash = md5(f.read())
+            if new_config_hash != config_hash:
+                config_hash = new_config_hash
+                config = read_config(config_path)
+
+                processor = processing.Processor(config)
+                url = args.url or config['url']
+                output = args.output or config['output']
             feeds = get_feeds(url)
             gotten = rssxml.xml_string(processor.process(get_feeds(url)))
             with open(output, 'w') as f:
