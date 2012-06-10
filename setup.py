@@ -10,4 +10,4 @@ setup(
 	author_email = "None",
 	scripts = ['PyRus.py'],
 	packages = ['PyRus'],
-	install_requires = ["setuptools", 'feedreader', 'future'])
+	install_requires = ["setuptools", 'feedreader', 'future', 'nltk'])

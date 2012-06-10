@@ -6,6 +6,7 @@ PyRus=/home/aaron/Dropbox/Projects/PyRus {
   __init__.py
   data_file.py
   filters.py
+  nltk_filters.py
   processing.py
   rss.py
   rssxml.py
