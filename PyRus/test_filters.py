@@ -7,8 +7,17 @@ from .test_helpers import *
 
 from .filters import *
 from .nltk_filters import *
+import nltk
 
 class ExtractorTest(TestCase):
+    @Test
+    def stoplist_sanity(self):
+        self.assertThat(nltk.corpus.stopwords.words('english'),
+                Contains('most'))
+
+    @Given(stoplist_sanity)
+    def unusualness_test(self):
+        self.assertFalse(Extractor().is_unusual("most"))
     @Test
     def set_text(self):
         self.texts = (
@@ -45,4 +54,5 @@ class ExtractorTest(TestCase):
         self.assertThat(extracted, Not(Contains("how")))
         self.assertThat(extracted, Not(Contains("and")))
         self.assertThat(extracted, Not(Contains("into")))
+        self.assertThat(extracted, Not(Contains("most")))
 
