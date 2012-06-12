@@ -28,7 +28,7 @@ class Processor(object):
 
     def add_rss_title_to_items(self, rss):
         for e in rss['entries']:
-            e['title'] = "[{}] {}".format(rss['feed']['title'], e['title'])
+            e['title'] = u"[{}] {}".format(rss['feed']['title'], e['title'])
         return rss
 
     def merge(self, rsses):
