@@ -26,9 +26,14 @@ class Processor(object):
     def process_single(self, rss):
         return self.sort(self.filter(rss))
 
+    def add_rss_title_to_items(self, rss):
+        for e in rss['entries']:
+            e['title'] = "[{}] {}".format(rss['feed']['title'], e['title'])
+        return rss
+
     def merge(self, rsses):
         "[RssFeed] -> RssFeed"
-        all_items = reduce(add, [e['entries'] for e in rsses], [])
+        all_items = reduce(add, [self.add_rss_title_to_items(e)['entries'] for e in rsses], [])
         return self.sort( dict(entries = all_items, feed = dict(title = self.new_name)))
 
     def process(self, rsses):

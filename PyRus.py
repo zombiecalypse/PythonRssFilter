@@ -8,7 +8,7 @@ from datetime import datetime
 from md5 import md5
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = "TODO")
+    parser = argparse.ArgumentParser(description = PyRus.__doc__)
     parser.add_argument('-V', '--version', action='version', version = '%(prog)s {}'.format(version))
     parser.add_argument('-u', '--url', help = "Url of a feed", action='append')
     parser.add_argument('-c', '--config', help = "Config file to use", default = "~/.rss_config")
