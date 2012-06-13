@@ -28,11 +28,14 @@ def try_to_make_pubdate(item):
 
 def try_to_make_description(item):
     try:
-        item['description'] = unicode(item['description'])
+        item['description'] = sanitize(item['description'])
         return E.description(item['description'])
     except Exception as e:
         print e
-        print item['description']
+        print repr(item['description'])
+
+def sanitize(string):
+    return unicode(string)
 
 def xml_item(item):
     "Item -> Xml"
