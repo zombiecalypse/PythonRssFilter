@@ -1,11 +1,19 @@
 from operator import add
 from concurrent import futures
+from time import struct_time
 from .filters import filter, make_filter_from_config
+
 
 def _updated(d, **kwargs):
     d2 = dict(d)
     d2.update(kwargs)
     return d2
+
+def sort_key(x):
+	if 'updated_parsed' in x:
+		return x['updated_parsed']
+	else:
+		return struct_time((2000,1,1,0,0,0,0,0,0))
 
 class Processor(object):
     def __init__(self, config):
@@ -21,7 +29,7 @@ class Processor(object):
         return _updated(rss, entries = 
                     list(reversed(sorted(
                         rss['entries'], 
-                        key = lambda x: x['updated_parsed'])))) #TODO
+                        key = sort_key)))) #TODO
 
     def process_single(self, rss):
         return self.sort(self.filter(rss))

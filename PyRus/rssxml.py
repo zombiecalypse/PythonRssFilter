@@ -23,11 +23,17 @@ def try_to_make_guid(item):
     except KeyError as e:
         return E.guid(item['link'], isPermaLink = 'true')
 
+def try_to_make_pubdate(item):
+	try:
+		return E.pubDate(item['updated'])
+	except KeyError as e:
+		return None
+
 def xml_item(item):
     "Item -> Xml"
     return E.item(
             E.title(item['title']),
-            E.pubDate(item['updated']),
+						try_to_make_pubdate(item),
             E.description(item['description']),
             try_to_make_guid(item),
             E.link(item['link']))
