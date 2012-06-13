@@ -12,6 +12,7 @@ def rss_xml(rss):
     return RSS2(
             title = feed['title'],
             description = "Merged Feed '{}'".format(feed['title']),
+            link = rss['link'],
             lastBuildDate = datetime.utcnow(),
             items = map(xml_item, rss['entries']))
 
