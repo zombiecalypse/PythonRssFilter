@@ -29,11 +29,18 @@ def try_to_make_pubdate(item):
 	except KeyError as e:
 		return None
 
+def try_to_make_description(item):
+    try:
+        return E.description(item['description'])
+    except Exception as e:
+        print e
+        print item['description']
+
 def xml_item(item):
     "Item -> Xml"
     return E.item(
             E.title(item['title']),
-						try_to_make_pubdate(item),
-            E.description(item['description']),
+            try_to_make_pubdate(item),
+            try_to_make_description(item),
             try_to_make_guid(item),
             E.link(item['link']))
