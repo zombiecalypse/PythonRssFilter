@@ -31,7 +31,7 @@ def try_to_make_pubdate(item):
 
 def try_to_make_description(item):
     try:
-        print item['description']
+        item['description'] = unicode(item['description'])
         return E.description(item['description'])
     except Exception as e:
         print e
