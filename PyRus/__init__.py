@@ -6,7 +6,7 @@ import processing
 import rssxml
 
 # TODO:
-#   * 0.2 Configurable pipeline
+#   * 0.2 Configurable pipeline, multi output
 #   * 0.3 Keyword specific rules
 #   * 0.4 Fuzzy dropping (if score is not reached)
 #   * 0.5 AI scoring

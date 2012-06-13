@@ -219,7 +219,7 @@ class TestMerge(TestCase):
 
     def valid_item(self, item, title):
         self.assertThat(item, Contains('title'))
-        self.assertThat(item['title'], Equals(title))
+        self.assertThat(item['title'], Contains(title))
 
     @Given(merge_was_correct)
     def merge_has_sorted_correctly(self):

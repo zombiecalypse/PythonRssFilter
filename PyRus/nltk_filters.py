@@ -2,11 +2,6 @@ import nltk
 
 class Extractor(object):
     "Caching Borg that extracts a list of important words from a text"
-    __state = dict()
-
-    def __init__(self):
-        self.__dict__ = self.__state
-
     def is_noun(self, w):
         return w[0] == 'N'
 
