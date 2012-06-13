@@ -12,7 +12,7 @@ def rss_xml(rss):
     return RSS2(
             title = feed['title'],
             description = "Merged Feed '{}'".format(feed['title']),
-            link = rss['link'],
+            link = "http://google.com",
             lastBuildDate = datetime.utcnow(),
             items = map(xml_item, rss['entries']))
 
@@ -31,7 +31,7 @@ def try_to_make_pubdate(item):
 def try_to_make_description(item):
     try:
         item['description'] = sanitize(item['description'])
-        return E.description(item['description'])
+        return item['description']
     except Exception as e:
         print e
         print repr(item['description'])
