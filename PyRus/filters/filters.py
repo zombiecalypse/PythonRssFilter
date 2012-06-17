@@ -1,7 +1,6 @@
 from itertools import chain
 from concurrent import futures
 from ..helpers import *
-from .rssxml import xml_string
 
 
 def filter(main_filter, rss):

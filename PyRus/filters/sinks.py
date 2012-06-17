@@ -1,5 +1,6 @@
 from .filters import Filter
 from ..helpers import *
+from .rssxml import xml_string
 
 class DictSink(Filter):
     def __init__(self, title):

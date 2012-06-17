@@ -11,11 +11,11 @@ PyRus=/home/aaron/Dropbox/Projects/PyRus {
    __init__.py
    combiners.py
    filters.py
-   standard_filters.py
    nltk_filters.py
    rss.py
    rssxml.py
    sinks.py
+   standard_filters.py
   }
  }
  tests=PyRus filter="**/test_*.py" {
