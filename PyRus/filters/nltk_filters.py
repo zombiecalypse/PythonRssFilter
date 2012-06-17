@@ -2,9 +2,10 @@ import nltk
 from nltk.probability import FreqDist, LaplaceProbDist
 import os.path
 from cPickle import load
+from .standard_filters import PredicateFilter
 
 class Extractor(object):
-    "Caching Borg that extracts a list of important words from a text"
+    "Lazy Borg that extracts a list of important words from a text"
     __state = None
     def __init__(self):
         if self.__state is None:
@@ -37,3 +38,13 @@ class Extractor(object):
         tagged_words = [(w.lower(),tag) for sent in nltk.sent_tokenize(text) for w,tag in nltk.pos_tag(nltk.word_tokenize(sent))]
         return set(w for w,tag in tagged_words if
                 self.is_important(w,tag))
+
+class KeywordFilter(PredicateFilter):
+    def matches(self, text):
+        keywords = Extractor().extract(text)
+        return self.words.issubset(keywords)
+
+    def __init__(self, *words):
+        self.words = set(words)
+        PredicateFilter.__init__(self, lambda x: self.matches(x['description']))
+
