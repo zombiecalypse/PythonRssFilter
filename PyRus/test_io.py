@@ -5,8 +5,7 @@ from ludibrio import Stub
 
 from StringIO import StringIO
 
-from .rss import *
-from .rssxml import *
+from .filters import *
 
 from .test_helpers import *
 

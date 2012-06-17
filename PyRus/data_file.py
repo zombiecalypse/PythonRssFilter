@@ -4,7 +4,9 @@ def read_config(filename):
     if isinstance(filename, basestring):
         return _read_from_filename(filename)
 
-    f = filename
+    return _read_from_file(filename)
+
+def _read_from_file(f):
     return eval (compile(" ".join(map(str.strip, f.readlines())).strip(), f.name, 'eval'), filters.__dict__)
 
 
