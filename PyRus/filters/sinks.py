@@ -14,7 +14,7 @@ class DictSink(Filter):
 class FileSink(Filter):
     def __init__(self, file, title):
         self.file = file
-        self.title = title
+        self.dsink = DictSink(title)
     def __call__(self, rss):
         if isinstance(self.file, basestring):
             with open(self.file, 'w') as f:
@@ -24,4 +24,4 @@ class FileSink(Filter):
         return rss
 
     def write_to(self,file, rss):
-        file.write(xml_string(rss))
+        file.write(xml_string(self.dsink(rss)))
