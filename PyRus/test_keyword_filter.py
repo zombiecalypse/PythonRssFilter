@@ -195,8 +195,26 @@ class KeywordFilterTest(TestCase):
         self.pipe = (GetFeed(reddit_string) & GetFeed(xkcd_string)) >> self.filter >> DictSink('xkcd and reddit')
         self.result = self.pipe(None)
 
+    @Test
+    def strict_keyword_filter(self):
+        self.filter = KeywordFilter('python', 'huge')
+        self.pipe = (GetFeed(reddit_string) & GetFeed(xkcd_string)) >> self.filter >> DictSink('xkcd and reddit')
+        self.result = self.pipe(None)
+
+
     @Given(keyword_filter)
     def keeps_interesting_stuff(self):
         self.assertThat(self.result, IsInstance(dict))
         self.assertThat(self.result, Contains('entries'))
-        self.assertThat([e['title'] for e in self.result['entries']], Contains('[xkcd.com] Snake'))
+        self.assertThat([e['title'] for e in self.result['entries']],
+                MatchesSetwise(
+                    Equals('[xkcd.com] Snake'), 
+                    Equals('[Poetry] Snakes')))
+
+    @Given(strict_keyword_filter)
+    def keeps_interesting_stuff_adding_filters(self):
+        self.assertThat(self.result, IsInstance(dict))
+        self.assertThat(self.result, Contains('entries'))
+        self.assertThat([e['title'] for e in self.result['entries']],
+                MatchesSetwise(
+                    Equals('[xkcd.com] Snake')))
