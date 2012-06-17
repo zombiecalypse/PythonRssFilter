@@ -79,8 +79,8 @@ class CombinationFilter(Filter):
 
     def __and__(self, other):
         if isinstance(other, CombinationFilter):
-            return CombinationFilter(*(self.filters+other.filters))
+            return CombinationFilter(*(self.list+other.list))
         else:
-            return CombinationFilter(other, *self.filters)
+            return CombinationFilter(other, *self.list)
 
 
