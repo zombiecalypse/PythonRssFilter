@@ -1,5 +1,6 @@
 import nltk
 from nltk.probability import FreqDist, LaplaceProbDist
+import os.path
 from cPickle import load
 
 class Extractor(object):
@@ -11,7 +12,8 @@ class Extractor(object):
         self.__dict__ = self.__state
 
     def init_state(self):
-        with open('data/word_freq.pickle') as f:
+        own_dir, own_name = os.path.split(__file__)
+        with open(os.path.join(own_dir, 'data','word_freq.pickle')) as f:
             self.__state = dict(
                     log_threshold = -11,
                     prob_dist = load(f))

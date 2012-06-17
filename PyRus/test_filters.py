@@ -6,7 +6,6 @@ from ludibrio import Stub
 from .test_helpers import *
 
 from .filters import *
-from .nltk_filters import *
 import nltk
 
 class ExtractorTest(TestCase):

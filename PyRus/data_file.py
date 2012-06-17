@@ -1,17 +1,21 @@
-import json, os.path
+import os.path
+import filters
 def read_config(filename):
+    if isinstance(filename, basestring):
+        return _read_from_filename(filename)
+
+    f = filename
+    return eval (compile(" ".join(map(str.strip, f.readlines())).strip(), f.name, 'eval'), filters.__dict__)
+
+
+def _read_from_filename(filename):
     if not os.path.exists(filename):
         with open(filename, "w") as f:
-            json.dump(_default_config, f)
+            f.write(_default_config)
     with open(filename) as f:
-        return _validate_format(json.load(f))
+        return eval (compile(" ".join(f.readlines()), filename, 'eval'), filters.__dict__)
 
-_default_config = dict(
-        new_name = 'Merged RSS'
-        )
+_default_config = """
+GetFeed("http://xkcd.com/rss.xml") >> BlackListFilter('hitler') >> FileSink('xk.rss', title = 'Merged RSS')
+"""
 
-def _validate_format(dict):
-    assert "url" in dict, "Config must provide url"
-    assert "output" in dict, "Config must provide output path"
-    assert "new_name" in dict, "Config must provide output name"
-    return dict

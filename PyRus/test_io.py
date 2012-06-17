@@ -63,7 +63,7 @@ straight.'" /&gt;</summary></entry></feed>"""
 class TestIoSimpleRss(TestCase):
     @Test
     def simple(self):
-        self.rss =  get_feed(simple_string)
+        self.rss =  GetFeed(simple_string)()
 
     @Given(simple)
     def has_been_parsed(self):
@@ -76,7 +76,7 @@ class TestIoSimpleRss(TestCase):
     def reparse(self):
         new_xml = xml_string(self.rss)
         self.assertThat(new_xml, IsInstance(str))
-        self.rss = get_feed(new_xml)
+        self.rss = GetFeed(new_xml)()
         self.assertThat(self.rss, IsInstance(dict))
 
     @Given(reparse, has_been_parsed)
@@ -85,7 +85,7 @@ class TestIoSimpleRss(TestCase):
 class TestIoComplexRss(TestCase):
     @Test
     def xkcd(self):
-        self.rss =  get_feed(xkcd_string)
+        self.rss =  GetFeed(xkcd_string)()
 
     @Given(xkcd)
     def has_been_parsed(self):
@@ -98,7 +98,7 @@ class TestIoComplexRss(TestCase):
     def reparse(self):
         new_xml = xml_string(self.rss)
         self.assertThat(new_xml, IsInstance(str))
-        self.rss = get_feed(new_xml)
+        self.rss = GetFeed(new_xml)()
         self.assertThat(self.rss, IsInstance(dict))
 
     @Given(reparse, has_been_parsed)

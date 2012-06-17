@@ -6,8 +6,7 @@ from ludibrio import Stub
 
 from StringIO import StringIO
 
-from .rss import *
-from .processing import *
+from .filters import *
 
 from .test_helpers import *
 
@@ -192,22 +191,30 @@ straight.'" /&gt;</summary></entry></feed>"""
 class TestMerge(TestCase):
     @Test
     def parse(self):
-        self.rss1 =  get_feed(xkcd_string)
-        self.rss2 =  get_feed(reddit_string)
-        self.proc = Processor(dict(new_name = "Merged"))
+        self.rss1 =  GetFeed(xkcd_string)
+        self.rss2 =  GetFeed(reddit_string)
 
     @Given(parse)
     def pre_merge(self):
-        self.valid_feed(self.rss1, 'xkcd.com', 4)
-        self.valid_feed(self.rss2, 'Poetry - spoken word, literature code, less is more', 15)
+        self.valid_feed((self.rss1 >> DictSink('xkcd.com'))(None), 'xkcd.com', 4)
+        self.valid_feed(self.rss2(), 'Poetry - spoken word, literature code, less is more', 15)
 
 
     @Given(parse)
     def merge(self):
-        self.merge = self.proc.merge([self.rss1, self.rss2])
+        self.merge = (self.rss1 & self.rss2) >> DictSink('Merged')
+
+    @Given(merge)
+    def pipeline_is_correct(self):
+        self.assertThat(self.merge, IsInstance(CompositionFilter))
+        self.assertThat(self.merge.list[0], IsInstance(CombinationFilter))
+        self.assertThat(self.merge.list[1], IsInstance(DictSink))
+        self.assertThat(self.merge.list[0].list[0], IsInstance(GetFeed))
+        self.assertThat(self.merge.list[0].list[1], IsInstance(GetFeed))
 
     def valid_feed(self, feed, title, n_entries):
         self.assertThat(feed, IsInstance(dict))
+        self.assertThat(feed, Contains('feed'))
         self.assertThat(feed['feed'], Contains('title'))
         self.assertThat(feed['feed']['title'], Equals(title))
         self.assertThat(feed, Contains('entries'))
@@ -215,7 +222,8 @@ class TestMerge(TestCase):
 
     @Given(merge)
     def merge_was_correct(self):
-        self.valid_feed(self.merge, 'Merged', 19)
+        self.merged_feed = self.merge(None)
+        self.valid_feed(self.merged_feed, 'Merged', 19)
 
     def valid_item(self, item, title):
         self.assertThat(item, Contains('title'))
@@ -223,7 +231,7 @@ class TestMerge(TestCase):
 
     @Given(merge_was_correct)
     def merge_has_sorted_correctly(self):
-        newest = self.merge['entries'][0]
-        oldest = self.merge['entries'][-1]
+        newest = self.merged_feed['entries'][0]
+        oldest = self.merged_feed['entries'][-1]
         self.valid_item(oldest, u'Learning Thursday: Share a poetry technique with your fellow redditors')
         self.valid_item(newest, u'Kill\nHitler')

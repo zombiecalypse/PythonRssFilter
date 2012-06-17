@@ -1,10 +1,7 @@
 "A filtering system for rss feeds."
 version="0.1"
-from .rss import *
+from filters import *
 from data_file import *
-import processing
-import rssxml
-import nltk_filters
 
 # TODO:
 #   * 0.2 Configurable pipeline, multi output

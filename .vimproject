@@ -5,16 +5,24 @@ PyRus=/home/aaron/Dropbox/Projects/PyRus {
  src=PyRus filter="\(test_\)\@!*.py" {
   __init__.py
   data_file.py
-  filters.py
-  nltk_filters.py
+  helpers.py
   processing.py
-  rss.py
-  rssxml.py
+  filters=filters {
+   __init__.py
+   combiners.py
+   filters.py
+   standard_filters.py
+   nltk_filters.py
+   rss.py
+   rssxml.py
+   sinks.py
+  }
  }
  tests=PyRus filter="**/test_*.py" {
   test_helpers.py
   test_io.py
   test_merge.py
   test_filters.py
+  test_data_file.py
  }
 }

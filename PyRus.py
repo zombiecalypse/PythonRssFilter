@@ -10,35 +10,22 @@ from md5 import md5
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = PyRus.__doc__)
     parser.add_argument('-V', '--version', action='version', version = '%(prog)s {}'.format(version))
-    parser.add_argument('-u', '--url', help = "Url of a feed", action='append')
     parser.add_argument('-c', '--config', help = "Config file to use", default = "~/.rss_config")
-    parser.add_argument('-s', '--sleep', help = "seconds to sleep between gets", default = None, type = int)
-    parser.add_argument('-o', '--output', help = "output file", default = None)
+    parser.add_argument('-s', '--sleep', help = "seconds to sleep between gets",
+            default = 3600, type = int)
     args = parser.parse_args()
     config_path = os.path.expanduser(args.config)
-    config = read_config(config_path)
+    filter = read_config(config_path)
     with open(config_path) as f:
         config_hash = md5(f.read())
 
-    processor = processing.Processor(config)
-    url = args.url or config['url']
-    output = args.output or config['output']
-    if args.sleep is not None:
-        while True:
-            with open(config_path) as f:
-                new_config_hash = md5(f.read())
-            if new_config_hash != config_hash:
-                config_hash = new_config_hash
-                config = read_config(config_path)
+    while True:
+        with open(config_path) as f:
+            new_config_hash = md5(f.read())
+        if new_config_hash != config_hash:
+            config_hash = new_config_hash
+            filter = read_config(config_path)
 
-                processor = processing.Processor(config)
-                url = args.url or config['url']
-                output = args.output or config['output']
-            feeds = get_feeds(url)
-            gotten = rssxml.xml_string(processor.process(get_feeds(url)))
-            with open(output, 'w') as f:
-                f.write(gotten)
-            print datetime.now()
-            sleep(args.sleep)
-    else:
-        print (rssxml.xml_string(processor.process(get_feeds(url))))
+        filter(None)
+        print datetime.now()
+        sleep(args.sleep)
