@@ -19,10 +19,11 @@ PyRus=/home/aaron/Dropbox/Projects/PyRus {
   }
  }
  tests=PyRus filter="**/test_*.py" {
+  test_data_file.py
+  test_filters.py
   test_helpers.py
   test_io.py
   test_merge.py
-  test_filters.py
-  test_data_file.py
+  test_keyword_filter.py
  }
 }

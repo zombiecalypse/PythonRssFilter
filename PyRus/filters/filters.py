@@ -1,4 +1,5 @@
 from itertools import chain
+from concurrent import futures
 from ..helpers import *
 from .rssxml import xml_string
 
@@ -66,9 +67,13 @@ class CombinationFilter(Filter):
         assert all(isinstance(x, Filter) for x in filters)
         self.list = filters
 
+    def chain(self, l, rss):
+        with futures.ThreadPoolExecutor(max_workers = len(l)) as e:
+            return chain.from_iterable(list(e.map(lambda f: f.applied(rss), l)))
+
     def applied(self, rss = []):
         hashed = set()
-        for i in chain.from_iterable(f.applied(rss) for f in self.list): 
+        for i in self.chain(self.list, rss):
             if i not in hashed:
                 hashed.add(i)
                 yield i
